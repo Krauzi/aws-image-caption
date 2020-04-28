@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'injection/bloc_module.dart';
 import 'injection/dependency_module.dart';
+import 'screens/main/main_screen.dart';
 
 class Application extends StatelessWidget {
   @override
@@ -14,12 +15,12 @@ class Application extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Image Caption',
         routes: _routes,
-        // initialRoute: '/',
+        initialRoute: '/main',
       ),
     );
   }
 
   Map<String, Widget Function(BuildContext)> get _routes => {
-
+    '/main': (context) => MainScreen(),
   };
 }
