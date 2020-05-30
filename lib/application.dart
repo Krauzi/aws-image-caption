@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'injection/bloc_module.dart';
 import 'injection/dependency_module.dart';
 import 'screens/main/main_screen.dart';
+import 'screens/result/result_screen.dart';
 
 class Application extends StatelessWidget {
   @override
@@ -22,5 +23,6 @@ class Application extends StatelessWidget {
 
   Map<String, Widget Function(BuildContext)> get _routes => {
     '/main': (context) => MainScreen(),
+    '/results': (context) => ResultsScreen()
   };
 }
