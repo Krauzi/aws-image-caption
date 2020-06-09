@@ -23,47 +23,45 @@ class _MainContentState extends State<MainContent> {
     return Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-        color: applicationColors['gunmetal'],
+        color: AppColors.primaryColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Center(
-            child: Icon(AppIcons.attach,
-              color: applicationColors['cyan'],
-              size: MediaQuery.of(context).size.shortestSide * 0.2
-            ),
+          Icon(AppIcons.attach,
+            color: AppColors.onPrimary,
+            size: MediaQuery.of(context).size.shortestSide * 0.24
           ),
-          SizedBox(height: 16.0,),
+          SizedBox(height: 8.0,),
           RichText(
             text: TextSpan(text: 'Image', style: TextStyle(
-                    color: applicationColors['sienna'], fontSize: 22
+                    color: AppColors.accentColor, fontSize: 24
                 ),
             children: <TextSpan>[
                   TextSpan(text: 'Caption', style: TextStyle(
-                      color: applicationColors['sienna'],
-                      fontWeight: FontWeight.bold, fontSize: 22
+                      color: AppColors.accentColor,
+                      fontWeight: FontWeight.bold, fontSize: 24
                     ),
                   )
                 ]
             ),
           ),
-          SizedBox(height: 32,),
+          SizedBox(height: 8.0,),
           OptionButton(
-            color: applicationColors['skyblue'],
+            color: AppColors.secondAccentColor,
             text: 'Select image',
             icon: Icons.image,
-            textColor: applicationColors['gunmetal'],
-            splashColor: applicationColors['dazzled'],
+            textColor: AppColors.primaryColor,
+            splashColor: AppColors.secondAccentColorDark,
             onPressed: _selectImage,
           ),
           OptionButton(
-            color: applicationColors['sienna'],
+            color: AppColors.accentColor,
             text: 'Take photo',
             icon: Icons.camera,
-            textColor: applicationColors['gunmetal'],
+            textColor: AppColors.primaryColor,
             splashColor: Colors.red[900],
             onPressed: _takePhoto,
           )
@@ -77,6 +75,8 @@ class _MainContentState extends State<MainContent> {
       setState(() { _image = File(image.path); });
 
       proceedToResult();
+    }).catchError((e) {
+      print(e);
     });
   }
 
@@ -85,15 +85,15 @@ class _MainContentState extends State<MainContent> {
       setState(() { _image = File(image.path); });
 
       proceedToResult();
+    }).catchError((e) {
+      print(e);
     });
   }
 
   proceedToResult() {
     if (_image != null) {
-      Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(settings: const RouteSettings(name: '/results'),
-              builder: (context) =>
-                  ResultsScreen(image: _image)
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => ResultsScreen(image: _image)
       ));
     }
   }

@@ -17,14 +17,14 @@ class OptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(left: 46.0, right: 46.0, top: 44.0),
+      margin: const EdgeInsets.only(left: 32.0, right: 32.0, top: 36.0),
       alignment: Alignment.center,
       child: Row(
         children: <Widget>[
           Expanded(
             child: FlatButton(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0)
+                  borderRadius: BorderRadius.circular(16.0)
                 ),
                 splashColor: splashColor,
                 color: color,
@@ -45,7 +45,7 @@ class OptionButton extends StatelessWidget {
                           padding: EdgeInsets.all(5.0),
                           child: FlatButton(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(22.0)
+                                  borderRadius: BorderRadius.circular(12.0)
                               ),
                               splashColor: Colors.white,
                               color: textColor,
