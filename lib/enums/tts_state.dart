@@ -1,0 +1,3 @@
+enum TtsState {
+  PLAYING, STOPPED, PAUSED, CONTINUED
+}

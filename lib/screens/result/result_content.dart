@@ -4,11 +4,14 @@ import 'dart:ui';
 
 import 'package:awsimagecaption/blocs/aws_bloc.dart';
 import 'package:awsimagecaption/datasource/ec2_caption.dart';
+import 'package:awsimagecaption/datasource/rekognition_labels.dart';
+import 'package:awsimagecaption/enums/tts_state.dart';
 import 'package:awsimagecaption/screens/main/main_screen.dart';
 import 'package:awsimagecaption/screens/main/widgets/search_type_button.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:fade/fade.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../utils/app_colors.dart';
 
@@ -27,11 +30,23 @@ class _ResultsContentState extends State<ResultsContent>
   AnimationController _animationController;
   Animation<Offset> offset;
 
+  FlutterTts flutterTts;
+
   StreamSubscription _resultSubscription;
   Ec2Bloc _ec2bloc;
 
   String result = "";
   bool initialData;
+
+  TtsState ttsState = TtsState.STOPPED;
+
+  get isPlaying => ttsState == TtsState.PLAYING;
+
+  get isStopped => ttsState == TtsState.STOPPED;
+
+  get isPaused => ttsState == TtsState.PAUSED;
+
+  get isContinued => ttsState == TtsState.CONTINUED;
 
   @override
   void initState() {
@@ -45,8 +60,57 @@ class _ResultsContentState extends State<ResultsContent>
 
     initialData = false;
     _ec2bloc = BlocProvider.getBloc();
+    initTts();
 
     _resultSubscription = _ec2bloc.captionObservable.listen(_getCaption);
+  }
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    flutterTts.setStartHandler(() {
+      setState(() {
+        print("Playing");
+        ttsState = TtsState.PLAYING;
+      });
+    });
+
+    flutterTts.setCompletionHandler(() {
+      setState(() {
+        print("Complete");
+        ttsState = TtsState.STOPPED;
+      });
+    });
+
+    flutterTts.setCancelHandler(() {
+      setState(() {
+        print("Cancel");
+        ttsState = TtsState.STOPPED;
+      });
+    });
+
+    if (kIsWeb || Platform.isIOS) {
+      flutterTts.setPauseHandler(() {
+        setState(() {
+          print("Paused");
+          ttsState = TtsState.PAUSED;
+        });
+      });
+
+      flutterTts.setContinueHandler(() {
+        setState(() {
+          print("Continued");
+          ttsState = TtsState.CONTINUED;
+        });
+      });
+    }
+
+    flutterTts.setErrorHandler((msg) {
+      setState(() {
+        print("error: $msg");
+        ttsState = TtsState.STOPPED;
+      });
+    });
   }
 
   @override
@@ -54,6 +118,7 @@ class _ResultsContentState extends State<ResultsContent>
     super.dispose();
 
     _resultSubscription.cancel();
+    flutterTts.stop();
   }
 
   @override
@@ -135,7 +200,7 @@ class _ResultsContentState extends State<ResultsContent>
                                 flex: 1,
                                 child: SearchTypeButton(
                                   color: AppColors.secondAccentColor,
-                                  onPressed: () => {},
+                                  onPressed: _onRekognitionClick,
                                   splashColor: AppColors.secondAccentColorDark,
                                   text: "Rekognition",
                                 ),
@@ -210,12 +275,48 @@ class _ResultsContentState extends State<ResultsContent>
     _animationController.reverse();
   }
 
+  void _onRekognitionClick() async {
+    initialData = false;
+    _ec2bloc.getRekognitionLabels(widget.image);
+    _animationController.reverse();
+  }
+
   void _getCaption(Object object) {
     if (object is Ec2Caption) {
       setState(() {
         result = object.caption;
+        _speak(result);
+        _animationController.forward();
+      });
+    } else if (object is RekognitionLabels) {
+      setState(() {
+        result = object.labelWithPercentage;
+        _speak(object.labels);
         _animationController.forward();
       });
     }
   }
+
+  Future _speak(String text) async {
+    await flutterTts.setVolume(1.0);
+    await flutterTts.setSpeechRate(1.0);
+    await flutterTts.setPitch(1.0);
+
+    if (text != null) {
+      if (text.isNotEmpty) {
+        var result = await flutterTts.speak(text);
+        if (result == 1) setState(() => ttsState = TtsState.PLAYING);
+      }
+    }
+  }
+  Future _stop() async {
+    var result = await flutterTts.stop();
+    if (result == 1) setState(() => ttsState = TtsState.STOPPED);
+  }
+
+  Future _pause() async {
+    var result = await flutterTts.pause();
+    if (result == 1) setState(() => ttsState = TtsState.PAUSED);
+  }
+
 }

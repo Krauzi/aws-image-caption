@@ -23,6 +23,13 @@ class Ec2Bloc extends BlocBase {
         .catchError(_onCaptionError);
   }
 
+  Future getRekognitionLabels(File file) async {
+    _loadingCaptionSubject.add(true);
+    _ec2Repository.getRekognitionLabels(file)
+        .then(_onCaptionSuccess)
+        .catchError(_onCaptionError);
+  }
+
   Future _onCaptionSuccess(Object caption) async {
     _loadingCaptionSubject.add(false);
     _captionSubject.add(caption);
