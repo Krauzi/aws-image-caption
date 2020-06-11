@@ -27,9 +27,7 @@ class _Ec2ApiProvider implements Ec2ApiProvider {
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
-            headers: <String, dynamic>{
-              "Content-Type": "application/json"
-            },
+            headers: <String, dynamic>{},
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
