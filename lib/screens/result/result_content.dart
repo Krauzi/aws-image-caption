@@ -141,7 +141,7 @@ class _ResultsContentState extends State<ResultsContent>
                                   color: AppColors.accentColor,
                                   onPressed: _onEc2SearchClick,
                                   splashColor: Colors.red[800],
-                                  text: "EC2",
+                                  text: "Our model",
                                 ),
                               ),
                               Expanded(flex: 0, child: Container(width: 16.0)),
@@ -234,6 +234,7 @@ class _ResultsContentState extends State<ResultsContent>
     if (object is Ec2Caption) {
       setState(() {
         result = object.caption;
+        _webSocket(object.caption);
         _animationController.forward();
       });
     } else if (object is RekognitionLabels) {

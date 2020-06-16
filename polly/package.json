@@ -1,0 +1,19 @@
+{
+  "name": "aws-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.644.0",
+    "node-uuid": "^1.4.8",
+    "speaker": "^0.5.1",
+    "stream": "0.0.2",
+    "websocket": "^1.0.31",
+    "ws": "^7.3.0"
+  }
+}

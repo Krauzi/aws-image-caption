@@ -9,7 +9,7 @@ part of 'ec2_api_provider.dart';
 class _Ec2ApiProvider implements Ec2ApiProvider {
   _Ec2ApiProvider(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    this.baseUrl ??= 'http://ec2-35-153-106-137.compute-1.amazonaws.com';
+    this.baseUrl ??= 'http://ec2-18-232-49-183.compute-1.amazonaws.com';
   }
 
   final Dio _dio;
