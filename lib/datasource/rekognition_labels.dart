@@ -1,6 +1,9 @@
 class RekognitionLabels {
-  final String labels;
-  final String labelWithPercentage;
+  String labels;
+  String labelWithPercentage;
 
-  RekognitionLabels({this.labels, this.labelWithPercentage});
+  RekognitionLabels() {
+    this.labels = "";
+    this.labelWithPercentage = "";
+  }
 }

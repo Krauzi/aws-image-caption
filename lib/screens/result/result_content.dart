@@ -248,6 +248,7 @@ class _ResultsContentState extends State<ResultsContent>
 
   void _webSocket(String text) async {
     var channel = IOWebSocketChannel.connect(AppConfig.webSocket);
+    print(text);
     channel.sink.add("{\"textToSpeech\": \"$text\"}");
     channel.stream.listen((response) { _processResponse(response); });
   }

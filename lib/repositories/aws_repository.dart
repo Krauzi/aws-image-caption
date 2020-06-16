@@ -26,17 +26,16 @@ class Ec2Repository {
     );
 
     try {
-      String labels = "";
-      String labelsWithPercentage = "";
+      RekognitionLabels labels = RekognitionLabels();
       final service = Rekognition(region: AwsConfig.REGION, credentials: credentials);
       await service.detectLabels(image: Image(bytes: image), maxLabels: 8).then((value) {
         value.labels.forEach((element) {
-          labels += "${element.name}, ";
-          labelsWithPercentage += "${element.name}, ${element.confidence.toStringAsFixed(2)}%\n";
+          labels.labels += "${element.name}, ";
+          labels.labelWithPercentage += "${element.name}, ${element.confidence.toStringAsFixed(2)}%\n";
         });
       });
 
-      return RekognitionLabels(labels: labels, labelWithPercentage: labelsWithPercentage);
+      return labels;
     } catch(e) {
       return e;
     }
